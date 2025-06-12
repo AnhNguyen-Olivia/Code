@@ -34,77 +34,81 @@ class List {
 
 public:
   List() {
-    head = NULL;
-    first = head;
-    last = head;
+    head = NULL;         // Initialize head pointer to NULL (empty list)
+    first = head;        // Set first pointer to head (also NULL)
+    last = head;         // Set last pointer to head (also NULL)
   }
-  Item * removeLast();
-  Item * removeFirst();
-  void putFirst( Item *i );
-  void putLast( Item *i );
+  Item * removeLast();   // Declaration: removes and returns the last item in the list
+  Item * removeFirst();  // Declaration: removes and returns the first item in the list
+  void putFirst( Item *i ); // Declaration: inserts item at the front of the list
+  void putLast( Item *i );  // Declaration: inserts item at the end of the list
 
 protected:
-  int isEmpty() const { return (head == NULL); }
+  int isEmpty() const { return (head == NULL); } // Returns true if the list is empty
+
 };
 
 Item * List::removeFirst() {
-  Item *temp;
-  temp = first;
-  first = first->getPtr();
-  cout << "List::removeFirst() " << endl;
-  return temp;
+  Item *temp;                   // Declare a temporary pointer
+  temp = first;                 // Store the current first item
+  first = first->getPtr();      // Move first to the next item in the list
+  cout << "List::removeFirst() " << endl; // Print debug message
+  return temp;                  // Return the removed item
 }
 
 Item * List::removeLast() {
   Item *temp;
   temp = last;
   last = last->getPtr();
-  cout << "List::removeLast() " << endl;
-  return temp;
+  cout << "List::removeLast() " << endl; // Print debug message for removing last item
+  return temp;                           // Return the removed last item
 }
 
 void List::putFirst(Item *i) {
-  i->setPtr(first);
-  first = i;
-  cout << "List::putFirst() " << i->getData() << endl;
+  i->setPtr(first);                    // Set the new item's pointer to the current first item
+  first = i;                           // Update first to point to the new item
+  cout << "List::putFirst() " << i->getData() << endl; // Print debug message with item data
 }
 
 void List::putLast(Item *i) {
-  last->setPtr(i);//i->setPtr(last);
-  last = i;
+  last->setPtr(i);                     // Set the current last item's pointer to the new item
+  last = i;                            // Update last to point to the new item
 }
 
-
-class Stack : public List {
+class Stack : public List {             // Define Stack class inheriting from List
 public:
-  void push(Item *i);
-  Item * pop();
+  void push(Item *i);                  // Declaration: push item onto the stack
+  Item * pop();                        // Declaration: pop item from the stack
 };
 
-void Stack::push(Item *i) {
-  cout << "**** Stack::push() " << i->getData() << endl;
-  putFirst(i);
-}
 
-Item * Stack::pop() {
-  cout << "**** Stack::pop()" << endl;
-  return removeFirst();
-}
+/*
 
+This program demonstrates how to implement a simple singly linked list and a stack in C++ using classes and public inheritance.
 
-int main() {
-  cout << "****** Creating an Item" << endl << endl;
-  Item anItem(50), *p;
-  cout << "******* Creating a Stack" << endl << endl;
-  Stack aStack;
-  aStack.push( &anItem );
-  p = aStack.pop();
-  cout << "aStack.pop() " << p->getData() << endl << endl;
+- Item class:
+  Represents a node in the linked list.
+  Contains an integer value (data) and a pointer to the next Item (ptr).
+  Provides methods to set and get its data and pointer.
+  Prints debug messages when its methods are called for easier tracing.
 
-  anItem.setItem(100);
-  aStack.push( &anItem );
-  cout << "Calling removeFirst() from aStack" << endl;
-  p = aStack.removeFirst();
-  cout <<"aStack.removeFirst() " << p->getData() << endl << endl;
-  return 0;
-}
+- List class:
+  Manages a linked list of Item objects.
+  Maintains pointers to the head, first, and last items in the list.
+  Provides methods to:
+    * Add an item to the front (putFirst) or end (putLast) of the list.
+    * Remove and return the first (removeFirst) or last (removeLast) item.
+    * Check if the list is empty (isEmpty).
+  Prints debug messages to show when list operations are performed.
+
+- Stack class:
+  Inherits publicly from List.
+  Implements stack-specific methods:
+    * push: Adds an item to the top of the stack (front of the list).
+    * pop: Removes and returns the item from the top of the stack (front of the list).
+  Reuses the linked list operations from the List class to implement stack behavior.
+
+Purpose:
+The program illustrates how inheritance allows code reuse by building a stack on top of a linked list implementation. 
+Debug messages are included throughout to help trace the flow of operations and changes to the data structure.
+*/

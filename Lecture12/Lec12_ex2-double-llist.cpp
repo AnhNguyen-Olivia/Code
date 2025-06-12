@@ -371,3 +371,108 @@ int main() {
   cout << "Finished.\n"; cout << classRoll << endl;
   return 0;
 } //Lec12_ex2-double-llist.cpp
+
+/*
+This program demonstrates both singly and doubly linked lists in C++ using templates and inheritance.
+It includes:
+  - A generic singly linked list (TList<T>) for any data type.
+  - A doubly linked list (DblList) using an abstract node class (DblNode).
+  - A Student class derived from DblNode for use in the doubly linked list.
+  - A simple registration system for students.
+
+---------------------------
+SINGLY LINKED LIST SECTION:
+---------------------------
+
+template <class T> class TNode;
+  // Defines a node for the singly linked list, storing a value and a pointer to the next node.
+
+template <class T> class TList;
+  // Manages the singly linked list, with operations to add, remove, traverse, and modify nodes.
+
+TNode<T>:
+  - value: stores the data of type T.
+  - next: pointer to the next node.
+  - Constructors: default (next=NULL), and one that sets value.
+  - getNext(): returns pointer to next node.
+  - operator<<: prints the node's value.
+
+TList<T>:
+  - head: dummy head node (not holding data).
+  - tail: dummy tail node (not holding data).
+  - current: pointer to the current node for traversal.
+  - append(): add node to end.
+  - prepend(): add node to beginning.
+  - insertAfter(): insert node after current.
+  - advance(): move current to next node.
+  - goTop(): move current to head.
+  - goLast(): move current to last node.
+  - get(): get value at current node.
+  - replace(): replace value at current node.
+  - clear(): remove all nodes.
+  - isEmpty(): check if list is empty.
+  - operator<<: print all nodes in the list.
+
+---------------------------
+DOUBLY LINKED LIST SECTION:
+---------------------------
+
+class DblNode (abstract):
+  - next: pointer to next node.
+  - prev: pointer to previous node.
+  - printOn(): pure virtual, prints node data.
+  - readFrom(): pure virtual, reads node data.
+  - detach(): removes node from its neighbors.
+  - operator==: pure virtual, compares nodes.
+  - operator<<, operator>>: stream operators for nodes.
+
+class DblList:
+  - first: pointer to first node.
+  - last: pointer to last node.
+  - size: number of nodes.
+  - append(): add node to end.
+  - remove(): remove a node.
+  - deleteAll(): delete all nodes.
+  - find(): find a node by value.
+  - isEmpty(), getFirst(), getLast(), getSize(): utility functions.
+  - operator<<: print all nodes.
+
+---------------------------
+STUDENT CLASS SECTION:
+---------------------------
+
+class Student : public DblNode
+  - id: student ID.
+  - setId(): set student ID.
+  - operator==: compare students by ID.
+  - printOn(), readFrom(): for stream operations.
+  - operator<<: print student ID.
+
+---------------------------
+REGISTRATION SYSTEM:
+---------------------------
+
+int registerStudents(TList<Student *> & classRoll, const DblList & college)
+  - Prompts user for a student ID.
+  - Searches for the student in the college list.
+  - If found, adds pointer to classRoll (singly linked list).
+  - If not found, prints error.
+  - Returns 1 to continue, 0 to stop.
+
+---------------------------
+MAIN FUNCTION:
+---------------------------
+
+int main()
+  - Creates a college list of students with IDs 10000 to 10049 (doubly linked list).
+  - Prompts user to register students for a class.
+  - For each entered ID, adds the student pointer to classRoll if found.
+  - Prints the final classRoll (list of registered students).
+
+---------------------------
+PURPOSE:
+---------------------------
+- Demonstrates implementation and use of both singly and doubly linked lists in C++.
+- Shows how to use templates, inheritance, and abstract classes for flexible data structures.
+- Provides a simple example of managing and searching lists of objects (students).
+*/

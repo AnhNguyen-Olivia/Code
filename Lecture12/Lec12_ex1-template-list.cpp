@@ -1,60 +1,64 @@
-#include <iostream>
-#include <stdlib.h>
-#include <string>
+#include <iostream>      // For input/output stream operations
+#include <stdlib.h>      // For rand() and abort()
+#include <string>        // For using std::string
 
-using namespace std;
+using namespace std;     // Use the standard namespace
 
+// Forward declaration of template class TList
 template <class T> class TList;
 
+// Template class for a node in the list
 template <class T>
 class TNode {
-  friend class TList<T>;
+  friend class TList<T>; // TList<T> can access private members of TNode<T>
 private:
-  T value; // data stored in node
-  TNode * next; // points to the next node
+  T value;               // Data stored in node
+  TNode * next;          // Pointer to the next node
 public:
-  TNode() : next(NULL) {} // next point is NULL
-  TNode( const T & val );
-  TNode<T> * getNext() const;
-  template <class X> friend ostream & operator <<(ostream &, const TNode<X> & node);
+  TNode() : next(NULL) {}                // Default constructor, next is NULL
+  TNode( const T & val );                // Constructor with value
+  TNode<T> * getNext() const;            // Get pointer to next node
+  template <class X> friend ostream & operator <<(ostream &, const TNode<X> & node); // Output operator
 };
 
+// Constructor: initializes value and sets next to NULL
 template <class T> TNode<T>::TNode(const T & val) {
   value = val;
   next = NULL;
 }
 
+// Returns pointer to next node
 template <class T> TNode<T> * TNode<T>::getNext() const { return next; }
 
+// Output operator for TNode
 template <class T> 
 ostream & operator <<(ostream & os, const TNode<T> & node) {
   os << node.value << "->";
   return os;
 }
 
+// Template class for singly linked list
 template <class T> class TList {
-  TNode<T> * head; // dummy head node
-  TNode<T> * tail; // dummy tail node
-  TNode<T> * current; // current position
+  TNode<T> * head;     // Dummy head node
+  TNode<T> * tail;     // Dummy tail node
+  TNode<T> * current;  // Current position in the list
 public:
-  TList();
-  ~TList();
-  int advance();  // Return 0 if current is already at the end of the list; 
-  //otherwise, current will point to the next node and return 1.
-  void append( const T & nodeVal );  // Add a new node to the end of the list
-  void clear(); // Remove all nodes.
-  T get() const;  // Get the data at the current position.
-  void goLast();  // Set current to the last node in the list.
-  void goTop();	  // Set current to the head node.
-  void insertAfter( const T & nodeVal ); // Insert new node after current one.
-  int isEmpty() const; // Return 1 if the list is empty; otherwise,return 0.
-  void prepend( const T & nodeVal );
-  // Insert a node at the beginning of the list.
-  void replace( const T & newVal );
-  // Replace the data in the current node.
-  template <class X> friend ostream & operator <<(ostream & os, const TList<X> & list);
+  TList();             // Constructor
+  ~TList();            // Destructor
+  int advance();       // Move current to next node, return 1 if successful, 0 if at end
+  void append( const T & nodeVal );  // Add node to end
+  void clear();        // Remove all nodes
+  T get() const;       // Get value at current node
+  void goLast();       // Move current to last node
+  void goTop();        // Move current to head node
+  void insertAfter( const T & nodeVal ); // Insert after current
+  int isEmpty() const; // Return 1 if list is empty, else 0
+  void prepend( const T & nodeVal );     // Insert at beginning
+  void replace( const T & newVal );      // Replace value at current
+  template <class X> friend ostream & operator <<(ostream & os, const TList<X> & list); // Output operator
 };
  
+// Constructor: initializes dummy head and tail, links them, sets current to head
 template <class T> TList<T>::TList() {  
   head = new TNode<T>;
   tail = new TNode<T>;
@@ -63,17 +67,19 @@ template <class T> TList<T>::TList() {
   current = head;
 }
 
+// Destructor: clears list and deletes dummy nodes
 template <class T> TList<T>::~TList() {  
   clear();
   delete head;
   delete tail;
 }
 
+// Returns 1 if list is empty (head points directly to tail)
 template <class T> int TList<T>::isEmpty() const {  
   return head->next == tail;
 }
 
-
+// Removes all nodes except dummy head and tail
 template <class T> void TList<T>::clear() {  
   current = head->next;
   while( current != tail ) {	 
@@ -85,6 +91,7 @@ template <class T> void TList<T>::clear() {
   head->next = tail;
 }
 
+// Advances current to next node if not at end, returns 1 if moved, 0 otherwise
 template <class T> int TList<T>::advance() {
   if( !current ) abort();
   if( current->next != tail ) { 
@@ -94,26 +101,31 @@ template <class T> int TList<T>::advance() {
   return 0;
 }
 
+// Moves current to last node before tail
 template <class T> void TList<T>::goLast() {  
   if (!current) abort();
   while (current->next != tail)
-	current = current->next;
+    current = current->next;
 }
 
+// Moves current to head node
 template <class T> void TList<T>::goTop() {  
   current = head;
 }
 
+// Returns value at current node
 template <class T> T TList<T>::get() const {  
   if (!current) abort();
   return current->value;
 }
 
+// Replaces value at current node
 template <class T> void TList<T>::replace (const T & newVal) {  
   if( !current ) abort();
   current->value = newVal;
 }
 
+// Inserts new node after current, moves current to new node
 template <class T> void TList<T>::insertAfter (const T & nodeVal) {  
   if (!current) abort();
   TNode<T> * p = new TNode<T>( nodeVal );
@@ -122,16 +134,19 @@ template <class T> void TList<T>::insertAfter (const T & nodeVal) {
   current = p;
 }
 
+// Appends node to end of list
 template <class T> void TList<T>::append (const T & nodeVal) { 
   goLast();
   insertAfter( nodeVal );
 }
 
+// Prepends node to beginning of list
 template <class T> void TList<T>::prepend (const T & nodeVal) {  
   goTop();
   insertAfter( nodeVal );
 }
 
+// Output operator for TList: prints all nodes
 template <class T> 
 ostream & operator <<( ostream & os, const TList<T> & list) {  
   if (list.isEmpty()) return os;
@@ -144,6 +159,7 @@ ostream & operator <<( ostream & os, const TList<T> & list) {
   return os;
 }
 
+// Function to create and manipulate a list of random scores
 void createRandomScores() {
   TList<int> scores;
   cout << "Creating a random list of scores: \n";
@@ -169,11 +185,12 @@ void createRandomScores() {
   
 }
 
+// Function to create and manipulate a list of names
 void createNameList() {
   TList<string> names;
   names.append( "Nam" );
   names.append( "Huy" );
-  names.append( "Khánh" );
+  names.append( "Khï¿½nh" );
   names.append( "Ngoc" );
   names.append( "Son" );
   names.append( "Hung" );
@@ -198,10 +215,10 @@ void createNameList() {
   names.clear();
   if (names.isEmpty())
     cout << "the list is now empty\n\n";
-			    
+                
 }
 
-
+// Main function: runs both test functions
 int main() {
   createRandomScores();
   createNameList();

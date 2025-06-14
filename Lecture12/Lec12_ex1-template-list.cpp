@@ -60,134 +60,133 @@ public:
  
 // Constructor: initializes dummy head and tail, links them, sets current to head
 template <class T> TList<T>::TList() {  
-  head = new TNode<T>;
-  tail = new TNode<T>;
-  head->next = tail;
-  tail->next = head;
-  current = head;
+  head = new TNode<T>;           // Create dummy head node
+  tail = new TNode<T>;           // Create dummy tail node
+  head->next = tail;             // Head points to tail (empty list)
+  tail->next = head;             // Tail points back to head (not used, but for structure)
+  current = head;                // Current starts at head
 }
 
 // Destructor: clears list and deletes dummy nodes
 template <class T> TList<T>::~TList() {  
-  clear();
-  delete head;
-  delete tail;
+  clear();                       // Remove all nodes except dummy head/tail
+  delete head;                   // Delete dummy head
+  delete tail;                   // Delete dummy tail
 }
 
 // Returns 1 if list is empty (head points directly to tail)
 template <class T> int TList<T>::isEmpty() const {  
-  return head->next == tail;
+  return head->next == tail;     // True if no real nodes between head and tail
 }
 
 // Removes all nodes except dummy head and tail
 template <class T> void TList<T>::clear() {  
-  current = head->next;
-  while( current != tail ) {	 
-    head->next = current->next;
-    delete current;
-    current = head->next;
+  current = head->next;          // Start at first real node
+  while( current != tail ) {     // While not at dummy tail
+    head->next = current->next;  // Bypass current node
+    delete current;              // Delete current node
+    current = head->next;        // Move to next node
   }
-  current = head;
-  head->next = tail;
+  current = head;                // Reset current to head
+  head->next = tail;             // Head points to tail (empty list)
 }
 
 // Advances current to next node if not at end, returns 1 if moved, 0 otherwise
 template <class T> int TList<T>::advance() {
-  if( !current ) abort();
-  if( current->next != tail ) { 
-    current = current->next;
-     return 1;  
+  if( !current ) abort();        // Abort if current is null
+  if( current->next != tail ) {  // If not at last node
+    current = current->next;     // Move to next node
+    return 1;                    // Indicate success
   }
-  return 0;
+  return 0;                      // At end, can't advance
 }
 
 // Moves current to last node before tail
 template <class T> void TList<T>::goLast() {  
-  if (!current) abort();
-  while (current->next != tail)
-    current = current->next;
+  if (!current) abort();         // Abort if current is null
+  while (current->next != tail)  // While not at last node
+    current = current->next;     // Move to next node
 }
 
 // Moves current to head node
 template <class T> void TList<T>::goTop() {  
-  current = head;
+  current = head;                // Set current to dummy head
 }
 
 // Returns value at current node
 template <class T> T TList<T>::get() const {  
-  if (!current) abort();
-  return current->value;
+  if (!current) abort();         // Abort if current is null
+  return current->value;         // Return value at current node
 }
 
 // Replaces value at current node
 template <class T> void TList<T>::replace (const T & newVal) {  
-  if( !current ) abort();
-  current->value = newVal;
+  if( !current ) abort();        // Abort if current is null
+  current->value = newVal;       // Replace value at current node
 }
 
 // Inserts new node after current, moves current to new node
 template <class T> void TList<T>::insertAfter (const T & nodeVal) {  
-  if (!current) abort();
-  TNode<T> * p = new TNode<T>( nodeVal );
-  p->next = current->next;
-  current->next = p;
-  current = p;
+  if (!current) abort();         // Abort if current is null
+  TNode<T> * p = new TNode<T>( nodeVal ); // Create new node with value
+  p->next = current->next;       // New node points to next node
+  current->next = p;             // Current node points to new node
+  current = p;                   // Move current to new node
 }
 
 // Appends node to end of list
 template <class T> void TList<T>::append (const T & nodeVal) { 
-  goLast();
-  insertAfter( nodeVal );
+  goLast();                      // Move current to last node
+  insertAfter( nodeVal );        // Insert new node after current
 }
 
 // Prepends node to beginning of list
 template <class T> void TList<T>::prepend (const T & nodeVal) {  
-  goTop();
-  insertAfter( nodeVal );
+  goTop();                       // Move current to head
+  insertAfter( nodeVal );        // Insert new node after head
 }
 
 // Output operator for TList: prints all nodes
 template <class T> 
 ostream & operator <<( ostream & os, const TList<T> & list) {  
-  if (list.isEmpty()) return os;
-  TNode<T> * p = list.head->getNext();
-  while( p != list.tail ) {	
-    os << *p;
-    p = p->getNext();  
+  if (list.isEmpty()) return os; // If list is empty, do nothing
+  TNode<T> * p = list.head->getNext(); // Start at first real node
+  while( p != list.tail ) {      // While not at dummy tail
+    os << *p;                    // Print node (uses TNode's <<)
+    p = p->getNext();            // Move to next node
   }
-  os << endl;
-  return os;
+  os << endl;                    // End line after printing list
+  return os;                     // Return output stream
 }
 
 // Function to create and manipulate a list of random scores
 void createRandomScores() {
-  TList<int> scores;
+  TList<int> scores;             // Create a list of integers
   cout << "Creating a random list of scores: \n";
   for (int i = 0; i < 10; i++) {
-    int n = rand() % 100;
-    scores.append(n);
+    int n = rand() % 100;        // Generate random number 0-99
+    scores.append(n);            // Add to end of list
   }
   
-  cout << scores << endl;
+  cout << scores << endl;        // Print the list
   
-  scores.goLast();
-  cout << "Last item: " << scores.get() << endl;
-  scores.goTop();
-  scores.advance();
-  cout << "First item: " << scores.get() << endl;
+  scores.goLast();               // Move to last node
+  cout << "Last item: " << scores.get() << endl; // Print last value
+  scores.goTop();                // Move to head
+  scores.advance();              // Move to first real node
+  cout << "First item: " << scores.get() << endl; // Print first value
   cout << "\nReplacing first node with value 101...\n";
-  scores.replace( 101 );
-  cout << scores;
+  scores.replace( 101 );         // Replace first node's value with 101
+  cout << scores;                // Print updated list
   cout << "\nClearing the list..." ;
-  scores.clear();
+  scores.clear();                // Remove all nodes
   if (scores.isEmpty())
-  cout << "the list is now empty.\n\n";
-  
+    cout << "the list is now empty.\n\n"; // Confirm list is empty
 }
 
 // Function to create and manipulate a list of names
 void createNameList() {
-  TList<string> names;
+  TList<string> names;           // Create a list of strings
   names.append( "Nam" );
   names.append( "Huy" );
   names.append( "Kh�nh" );
@@ -202,42 +201,41 @@ void createNameList() {
   names.append( "Tuan" );
   names.append( "Nga" );
 
-  cout << "current: " << names.get() << endl;
-  cout << names;
-  names.goTop();
-  names.advance();
-  names.replace( "To Nguyen Minh Nhat" );
-  names.goLast();
-  names.insertAfter( "Cong" );
-  names.prepend( "Cao Minh Tuan" );
-  cout << names << endl;
+  cout << "current: " << names.get() << endl; // Print value at current (last inserted)
+  cout << names;                // Print the list
+  names.goTop();                // Move to head
+  names.advance();              // Move to first real node
+  names.replace( "To Nguyen Minh Nhat" ); // Replace first node's value
+  names.goLast();               // Move to last node
+  names.insertAfter( "Cong" );  // Insert "Cong" after last node
+  names.prepend( "Cao Minh Tuan" ); // Insert at beginning
+  cout << names << endl;        // Print updated list
   cout << "Clearing the list...";
-  names.clear();
+  names.clear();                // Remove all nodes
   if (names.isEmpty())
-    cout << "the list is now empty\n\n";
-                
+    cout << "the list is now empty\n\n"; // Confirm list is empty
 }
 
 // Main function: runs both test functions
 int main() {
-  createRandomScores();
-  createNameList();
-  return 0;
+  createRandomScores();         // Test with integer list
+  createNameList();             // Test with string list
+  return 0;                     // End program
 } // Lec12_ex1-template-list.cpp
 
 /*
-This program demonstrates the implementation and usage of a generic singly linked list in C++ using templates.
+This program in Lec12_ex1-template-list.cpp demonstrates how to implement and use a generic singly linked list in C++ using templates.
 
-Highlights:
+Key points:
 
-- The TNode<T> class defines a node that stores a value of type T and a pointer to the next node.
-- The TList<T> class manages the linked list, providing operations such as append, prepend, insert after, replace, clear, and traversal.
-- Dummy head and tail nodes are used to simplify list operations and edge cases.
-- Two test functions are included:
-    • createRandomScores: Builds a list of random integers, then demonstrates appending, traversing, replacing, and clearing nodes.
-    • createNameList: Builds a list of names (strings), then demonstrates various list operations.
-- The main() function runs both test functions, showing that the list works with both int and string types.
-
+The TNode<T> class represents a node in the list, storing a value of type T and a pointer to the next node.
+The TList<T> class manages the linked list, supporting operations like append, prepend, insert, replace, clear, and traversal.
+The list uses dummy head and tail nodes to simplify edge cases.
+The program provides two test functions:
+createRandomScores: creates a list of random integers, demonstrates appending, traversing, replacing, and clearing.
+createNameList: creates a list of names (strings), demonstrates various list operations.
+The main() function runs both test functions to show the list working with both int and string types.
 Purpose:
-To illustrate how to build and use a reusable, type-safe singly linked list in C++ with templates, and to demonstrate basic list operations for different data types.
+To teach how to build and use a reusable, type-safe, singly linked list in C++ using templates, and to demonstrate basic list operations with different data types.
+
 */

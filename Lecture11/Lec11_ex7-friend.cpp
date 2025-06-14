@@ -1,46 +1,53 @@
 #include <iostream>
-#include <cstring>
+#include <string>
 using namespace std;
 
-class Student;
+class Student; // Forward declaration
 
-class Employee { 
-  char id[8];  // Id number
-  float payRate;     // pay rate
+class Employee {
+    string id;        // Employee ID
+    float payRate;    // Employee pay rate
 public:
-  Employee(const char * idVal ) {
-    strcpy( id, idVal);
-    id[7] =0;
-    payRate = 0.24f;
-  }
-  
-  friend class Student;
+    Employee(const string& idVal, float rate = 0.24f)
+        : id(idVal), payRate(rate) {} // Use initialization list
+
+    void display() const {
+        cout << "Employee ID: " << id << "\nPay Rate: " << payRate << endl;
+    }
+
+    friend class Student; // Student can access private members
 };
 
-class Student { 
-  char id[8];   // ID number
-  int employed;
+class Student {
+    string id;      // Student ID
+    bool employed;  // Employment status
 public:
-  Student() { 
-    id[0] = '\0';
-    employed = 0;
-  };
+    Student(const string& idVal = "", bool emp = false)
+        : id(idVal), employed(emp) {}
 
-  void getE1() {
-    Employee e("xxxxxxx");
-    cout << e.id << endl << e.payRate << endl;  
-  }
-  
-  void getE2(Employee & e) {
-    cout << e.id << endl << e.payRate << endl;  
-  }
+    // Student can access Employee's private members
+    void showEmployeeInfo(const Employee& e) const {
+        cout << "[Student Access]\n";
+        cout << "Employee ID: " << e.id << "\nPay Rate: " << e.payRate << endl;
+    }
 };
 
+int main() {
+    Employee e("333445555", 0.30f); // Create Employee with custom pay rate
+    Student s("S1234567", true);    // Create Student with ID and employment status
 
-int main() { 
-  Employee e( "333445555" );
-  Student s;
-  s.getE1();
-  s.getE2(e);
-  return 0;
-}// Lec11_ex7-friend.cpp
+    cout << "Employee info (via Employee):" << endl;
+    e.display();
+
+    cout << "\nEmployee info (via Student):" << endl;
+    s.showEmployeeInfo(e);
+
+    return 0;
+}
+/*
+Improvements:
+- Uses std::string for safer and easier string handling.
+- Adds display functions for better encapsulation.
+- Demonstrates friend class access in a clearer way.
+- Adds more meaningful constructors and output.
+*/

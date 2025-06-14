@@ -224,3 +224,20 @@ int main() {
   createNameList();
   return 0;
 } // Lec12_ex1-template-list.cpp
+
+/*
+This program demonstrates the implementation and usage of a generic singly linked list in C++ using templates.
+
+Highlights:
+
+- The TNode<T> class defines a node that stores a value of type T and a pointer to the next node.
+- The TList<T> class manages the linked list, providing operations such as append, prepend, insert after, replace, clear, and traversal.
+- Dummy head and tail nodes are used to simplify list operations and edge cases.
+- Two test functions are included:
+    • createRandomScores: Builds a list of random integers, then demonstrates appending, traversing, replacing, and clearing nodes.
+    • createNameList: Builds a list of names (strings), then demonstrates various list operations.
+- The main() function runs both test functions, showing that the list works with both int and string types.
+
+Purpose:
+To illustrate how to build and use a reusable, type-safe singly linked list in C++ with templates, and to demonstrate basic list operations for different data types.
+*/
